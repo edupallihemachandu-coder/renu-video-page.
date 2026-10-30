@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#ffe3ef">
+<meta name="description" content="A little video made with love.">
+<title>A Little Video for You 💗</title>
+<style>
+  :root { color-scheme: light; --pink:#ff5f9e; --deep:#9d285b; --cream:#fff8fb; }
+  * { box-sizing:border-box; }
+  body {
+    margin:0; min-height:100vh; display:grid; place-items:center; padding:22px;
+    font-family: ui-rounded, "Trebuchet MS", system-ui, sans-serif; color:#702344;
+    background:
+      radial-gradient(circle at 12% 14%, #fff 0 5px, transparent 6px),
+      radial-gradient(circle at 88% 22%, #fff 0 4px, transparent 5px),
+      linear-gradient(145deg,#ffe6f0,#fff5fa 48%,#ffd5e7);
+    overflow-x:hidden;
+  }
+  .heart { position:fixed; opacity:.22; color:#ff5f9e; pointer-events:none; animation:float 8s ease-in-out infinite; }
+  .h1 { left:5%; top:10%; font-size:38px; } .h2 { right:7%; bottom:10%; font-size:54px; animation-delay:-3s; }
+  @keyframes float { 0%,100%{transform:translateY(0) rotate(-8deg)} 50%{transform:translateY(-18px) rotate(8deg)} }
+  main { width:min(100%,720px); position:relative; }
+  .card {
+    background:rgba(255,255,255,.82); border:1px solid rgba(255,95,158,.24);
+    box-shadow:0 22px 65px rgba(157,40,91,.14); border-radius:28px; padding:clamp(18px,4vw,34px);
+    text-align:center; backdrop-filter:blur(10px);
+  }
+  .eyebrow { display:inline-block; padding:7px 13px; border-radius:99px; background:#ffe4ef; color:var(--deep); font-size:.82rem; letter-spacing:.04em; }
+  h1 { margin:14px 0 7px; font-size:clamp(1.8rem,6vw,3rem); line-height:1.1; color:#b62f69; }
+  .sub { margin:0 auto 22px; max-width:38rem; color:#88516a; line-height:1.55; }
+  .video-shell { overflow:hidden; border-radius:20px; background:#210e18; border:4px solid #fff; box-shadow:0 8px 26px #a62e6320; }
+  video { display:block; width:100%; max-height:72vh; background:#210e18; object-fit:contain; }
+  .actions { display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin-top:17px; }
+  button { appearance:none; border:0; cursor:pointer; font:inherit; font-weight:700; border-radius:99px; padding:12px 20px; }
+  #playBtn { background:linear-gradient(135deg,#ff6da8,#e53f87); color:white; box-shadow:0 7px 18px #e53f8735; }
+  #soundBtn { background:#fff0f6; color:#a52d62; border:1px solid #ffc1d9; }
+  .note { margin:15px 0 0; font-size:.8rem; color:#9c6a80; line-height:1.45; }
+  .status { min-height:1.2em; margin:9px 0 0; color:#9d285b; font-size:.9rem; }
+  footer { text-align:center; margin-top:15px; color:#a45f7d; font-size:.78rem; }
+</style>
+</head>
+<body>
+<div class="heart h1" aria-hidden="true">♥</div><div class="heart h2" aria-hidden="true">♡</div>
+<main>
+  <section class="card">
+    <span class="eyebrow">MADE WITH LOVE ✨</span>
+    <h1>A Little Video for You 💗</h1>
+    <p class="sub">A little moment, just for you. Tap play and enjoy every second. 💕</p>
+    <div class="video-shell">
+      <video id="video" controls playsinline preload="metadata">
+        <source src="./video.mp4" type="video/mp4">
+        Sorry, your browser cannot play this video. Please try a recent version of Chrome, Safari, or Firefox.
+      </video>
+    </div>
+    <div class="actions">
+      <button id="playBtn" type="button">▶ Play video</button>
+      <button id="soundBtn" type="button">🔊 Turn sound on</button>
+    </div>
+    <p class="status" id="status" role="status" aria-live="polite"></p>
+    <p class="note">For the smoothest playback, use a steady internet connection. If the video does not start automatically, tap Play video.</p>
+  </section>
+  <footer>♡ a little page full of love ♡</footer>
+</main>
+<script>
+  const video = document.getElementById('video');
+  const playBtn = document.getElementById('playBtn');
+  const soundBtn = document.getElementById('soundBtn');
+  const status = document.getElementById('status');
+
+  playBtn.addEventListener('click', async () => {
+    try {
+      if (video.paused) { await video.play(); }
+      else { video.pause(); }
+    } catch (e) {
+      status.textContent = 'Tap the video player’s play button to start playback.';
+    }
+  });
+  soundBtn.addEventListener('click', () => {
+    video.muted = false;
+    video.volume = 1;
+    status.textContent = 'Sound is on 💗';
+    video.play().catch(() => {});
+  });
+  video.addEventListener('play', () => { playBtn.textContent = 'Ⅱ Pause video'; });
+  video.addEventListener('pause', () => { playBtn.textContent = '▶ Play video'; });
+  video.addEventListener('error', () => {
+    status.textContent = 'The video could not load. Check that video.mp4 was uploaded beside index.html, then refresh.';
+  });
+  // Browsers commonly block autoplay with sound. Try muted autoplay; the viewer can enable sound.
+  window.addEventListener('load', () => {
+    video.muted = true;
+    video.play().then(() => {
+      status.textContent = 'Video started muted. Tap “Turn sound on” for audio.';
+    }).catch(() => {
+      status.textContent = 'Tap Play video to start.';
+    });
+  });
+</script>
+</body>
+</html>
